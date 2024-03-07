@@ -11,6 +11,11 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+# Wagtail
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
+
 ...
 
 schema_view = get_schema_view(
@@ -44,6 +49,10 @@ urlpatterns = (
         path(
             "redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
         ),
+        # Wagtail
+        path("cms/", include(wagtailadmin_urls)),
+        path("documents/", include(wagtaildocs_urls)),
+        path("pages/", include(wagtail_urls)),
         # EGO Cars app
         path("", include(("ego.cars.urls", "cars"), namespace="cars")),
     ]

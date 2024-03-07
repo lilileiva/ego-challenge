@@ -6,5 +6,12 @@ sqlparse==0.4.4
 tzdata==2024.1
 django-environ==0.11.2
 python-dotenv==1.0.1
+
+# REST Framework
 djangorestframework==3.14.0
+
+# Swagger
 drf-yasg==1.21.7
+
+# CMS
+wagtail==6.0.1

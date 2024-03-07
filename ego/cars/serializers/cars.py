@@ -9,4 +9,4 @@ class CarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = "__all__"
-        read_only_fields = ('uuid', 'created_at', 'updated_at')
+        read_only_fields = ("created_at", "updated_at")

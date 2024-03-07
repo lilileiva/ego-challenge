@@ -39,6 +39,7 @@ DAJNGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "drf_yasg",
 ]
 
 LOCAL_APPS = ["ego.cars.apps.CarsAppConfig"]
@@ -128,7 +129,6 @@ STATICFILES_FINDERS = [
 ]
 
 # Media
-# MEDIA_ROOT = str(APPS_DIR('media'))
 MEDIA_ROOT = os.path.join(ROOT_DIR, "media")
 MEDIA_URL = "/media/"
 

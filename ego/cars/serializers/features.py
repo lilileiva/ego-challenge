@@ -2,11 +2,11 @@
 from rest_framework import serializers
 
 # Models
-from ego.cars.models.cars import Car
+from ego.cars.models.features import Feature
 
 
-class CarSerializer(serializers.ModelSerializer):
+class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Car
+        model = Feature
         fields = "__all__"
         read_only_fields = ("created_at", "updated_at")

@@ -44,6 +44,7 @@ class CarsViewSet(viewsets.ModelViewSet):
     def add_feature(self, request):
         serializer = AddFeatureSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(status.HTTP_200_OK)
 
     @swagger_auto_schema(

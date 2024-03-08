@@ -10,7 +10,11 @@ from rest_framework.parsers import JSONParser as JSONParser
 from ego.cars.models.cars import Car
 
 # Serializer
-from ego.cars.serializers.cars import CarSerializer, GetCarReviewsSerializer
+from ego.cars.serializers.cars import (
+    CarSerializer,
+    GetCarReviewsSerializer,
+    AddFeatureSerializer,
+)
 from rest_framework.response import Response
 
 
@@ -22,6 +26,12 @@ class CarsViewSet(viewsets.ModelViewSet):
     filter_backends = [OrderingFilter]
     ordering_fields = ["price", "year"]
     parser_classes = (MultipartParser, JSONParser)
+
+    @action(detail=False, methods=["post"])
+    def add_feature(self, request):
+        serializer = AddFeatureSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(status.HTTP_200_OK)
 
     @action(detail=False, methods=["post"])
     def reviews(self, request):

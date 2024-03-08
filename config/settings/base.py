@@ -55,7 +55,9 @@ THIRD_PARTY_APPS = [
     "taggit",
 ]
 
-LOCAL_APPS = ["ego.cars.apps.CarsAppConfig"]
+LOCAL_APPS = [
+    "ego.cars.apps.CarsAppConfig",
+]
 
 INSTALLED_APPS = DAJNGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

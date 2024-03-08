@@ -15,7 +15,9 @@ class Car(models.Model):
     image = models.ImageField(help_text="Car image", upload_to="cars")
     title = models.CharField(max_length=100, help_text="Car brief description")
     description = models.TextField(max_length=500, help_text="Car extended description")
-    features = models.ManyToManyField("cars.Feature", help_text="Car features")
+    features = models.ManyToManyField(
+        "cars.Feature", null=True, blank=True, help_text="Car features"
+    )
     created_at = models.DateTimeField(
         auto_now_add=True, help_text="Date when car was created"
     )
@@ -38,3 +40,8 @@ class Car(models.Model):
         if reviews:
             return sum([review.stars for review in reviews]) / len(reviews)
         return 0
+
+    def add_feature(self, feature):
+        self.features.add(feature)
+        self.save()
+        return self

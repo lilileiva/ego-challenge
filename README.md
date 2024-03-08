@@ -11,6 +11,26 @@ Submit to EGO challenge consisting in a development of a API using Django
 
 ## Install-and-run-the-project
 
+### with Docker
+
+Clone de repository
+
+    git clone https://github.com/lilileiva/ego-challenge
+
+Create .env file with env_sample.txt content
+
+    mkdir .env
+
+Build the image
+
+    docker build -t django-ego .
+
+Run the project
+
+    docker run -it -p 8000:8000 django-ego
+
+### with virtual enviroment
+
 Clone de repository
 
     git clone https://github.com/lilileiva/ego-challenge
@@ -25,11 +45,19 @@ Set a virtual enviroment
 
     activate
 
-    cd ../../..
+    cd ../..
+
+Create .env file with env_sample.txt content
+
+    mkdir .env
 
 Install requirements
 
     pip install -r requeriments.txt
+
+Migrate
+
+    python manage.py migrate
 
 Run the project
 

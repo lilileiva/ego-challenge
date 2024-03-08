@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from ego.utils.enums.cars_types import CarsTypes
+from ego.cars.models.reviews import Review
 
 
 class Car(models.Model):
@@ -27,3 +28,13 @@ class Car(models.Model):
 
     def __str__(self):
         return self.model
+
+    def get_reviews(self):
+        reviews = Review.objects.filter(car=self.uuid).order_by("-created_at")
+        return list(reviews)
+
+    def get_average_rating(self):
+        reviews = self.get_reviews()
+        if reviews:
+            return sum([review.stars for review in reviews]) / len(reviews)
+        return 0

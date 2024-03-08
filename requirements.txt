@@ -12,7 +12,7 @@ requests==2.31.0
 djangorestframework==3.14.0
 
 # Swagger
-drf-yasg==1.21.7
+drf_yasg==1.21.7
 
 # CMS
 wagtail==6.0.1

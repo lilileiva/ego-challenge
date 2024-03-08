@@ -40,7 +40,7 @@ class ReviewsTestCase(TestCase):
         self.assertEqual(len(reviews), 1)
 
     def test_review_create_success(self):
-        """Verify creation of dealership object"""
+        """Verify creation of review object"""
         payload = {"comment": "Excellent", "stars": 4, "car": str(self.car.uuid)}
         response = self.client.post("/reviews/", payload)
         self.assertEqual(response.status_code, 201)

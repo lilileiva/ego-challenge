@@ -41,7 +41,7 @@ class DealershipTestCase(TestCase):
         self.assertEqual(len(dealerships), 2)
 
     def test_dealerships_update_success(self):
-        """Update of feature object"""
+        """Update of dealership object"""
         payload = {
             "address": "Modified 1234",
             "province": Provinces.CHACO,
@@ -59,7 +59,7 @@ class DealershipTestCase(TestCase):
         self.assertEqual(self.dealership.phone, payload["phone"])
 
     def test_dealerships_patch_success(self):
-        """Partial update of feature object"""
+        """Partial update of dealership object"""
         payload = {
             "province": Provinces.CHACO,
         }
@@ -73,7 +73,7 @@ class DealershipTestCase(TestCase):
         self.assertEqual(self.dealership.province, payload["province"])
 
     def test_dealerships_delete_success(self):
-        """Delete feature object"""
+        """Delete dealership object"""
         response = self.client.delete(f"/dealership/{str(self.dealership.uuid)}/")
         self.assertEqual(response.status_code, 204)
         dealerships = Dealership.objects.all()

@@ -3,10 +3,10 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.filters import OrderingFilter
+from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser as MultipartParser
 from rest_framework.parsers import JSONParser as JSONParser
 from rest_framework.parsers import FileUploadParser as FileUploadParser
-from rest_framework.response import Response
 
 # Models
 from ego.cars.models.cars import Car
@@ -33,6 +33,7 @@ class CarsViewSet(viewsets.ModelViewSet):
     parser_classes = (
         MultipartParser,
         JSONParser,
+        FileUploadParser
     )
 
     @swagger_auto_schema(

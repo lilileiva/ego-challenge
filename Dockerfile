@@ -9,14 +9,16 @@ RUN apk update
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY entrypoint /entrypoint
-RUN chmod +x /entrypoint
+# Copy entrypoint script and set execute permissions
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+RUN apk add dos2unix && dos2unix /entrypoint.sh
 
-# Mounts the application code to the image
+# Mount the application code to the image
 COPY . app
 WORKDIR /app
 
 EXPOSE 8000
 
 # Run server
-ENTRYPOINT ["/entrypoint"]
+ENTRYPOINT ["/entrypoint.sh"]

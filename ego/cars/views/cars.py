@@ -1,7 +1,7 @@
 # Django REST Framework
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser as MultipartParser
@@ -30,11 +30,15 @@ class CarsViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     filter_backends = [OrderingFilter]
     ordering_fields = ["price", "year"]
-    parser_classes = (
-        MultipartParser,
-        JSONParser,
-        FileUploadParser
-    )
+    parser_classes = (MultipartParser, JSONParser, FileUploadParser)
+
+    def get_permissions(self):
+        if self.action == "add_feature":
+            return [IsAuthenticated(), IsAdminUser()]
+        elif self.request.method != "GET" and self.action != "reviews":
+            return [IsAuthenticated(), IsAdminUser()]
+        else:
+            return [AllowAny()]
 
     @swagger_auto_schema(
         methods=["post"],

@@ -6,6 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 # REST Framework
 from rest_framework.test import APITestCase
+from rest_framework import status
 
 # Utils
 from ego.utils.enums.cars_types import CarsTypes
@@ -14,6 +15,7 @@ from ego.utils.enums.cars_types import CarsTypes
 from ego.cars.models.cars import Car
 from ego.cars.models.features import Feature
 from ego.cars.models.reviews import Review
+from django.contrib.auth.models import User
 
 
 class CarsTestCase(APITestCase):
@@ -45,9 +47,11 @@ class CarsTestCase(APITestCase):
             description="Lorem ipsum dolor sit",
             image=self.create_test_image(),
         )
-        self.review = Review.objects.create(
-            stars=5, comment="Test comment", car=self.car
-        )
+        self.review = Review.objects.create(stars=5, comment="Test comment", car=self.car)
+        username = "test_username"
+        password = "TestingPassword123"
+        User.objects.create_user(email=username, username=username, password=password, is_staff=True, is_superuser=True)
+        self.login_payload = {"username": username, "password": password}
 
     def tearDown(self):
         self.car.image.delete()
@@ -137,6 +141,8 @@ class CarsTestCase(APITestCase):
 
     def test_cars_create_success(self):
         """Verify creation of car object"""
+        response = self.client.post("/internal/login/", self.login_payload)
+        self.assertEqual(response.status_code, 200)
         payload = {
             "car_type": CarsTypes.AUTOS,
             "model": "Auto Test New",
@@ -147,9 +153,9 @@ class CarsTestCase(APITestCase):
             "image": self.create_test_image(),
         }
         response = self.client.post("/cars/", payload, format="multipart")
+        self.assertEqual(response.status_code, 201)
         self.new_car = Car.objects.get(uuid=response.json()["uuid"])
         cars = Car.objects.all()
-        self.assertEqual(response.status_code, 201)
         self.assertEqual(self.new_car.model, payload["model"])
         self.assertEqual(self.new_car.year, payload["year"])
         self.assertEqual(self.new_car.car_type, payload["car_type"])
@@ -158,6 +164,8 @@ class CarsTestCase(APITestCase):
     def test_cars_update_success(self):
         """Update of car object"""
         self.car.image.delete()
+        response = self.client.post("/internal/login/", self.login_payload)
+        self.assertEqual(response.status_code, 200)
         payload = {
             "car_type": CarsTypes.AUTOS,
             "model": "Auto Modified",
@@ -167,9 +175,7 @@ class CarsTestCase(APITestCase):
             "description": "Lorem ipsum dolor sit",
             "image": self.create_test_image(),
         }
-        response = self.client.put(
-            f"/cars/{str(self.car.uuid)}/", payload, format="multipart"
-        )
+        response = self.client.put(f"/cars/{str(self.car.uuid)}/", payload, format="multipart")
         self.assertEqual(response.status_code, 200)
         self.car.refresh_from_db()
         self.assertEqual(self.car.model, payload["model"])
@@ -178,6 +184,8 @@ class CarsTestCase(APITestCase):
 
     def test_cars_patch_success(self):
         """Partial update of car object"""
+        response = self.client.post("/internal/login/", self.login_payload)
+        self.assertEqual(response.status_code, 200)
         payload = {
             "model": "Auto Modified",
         }
@@ -187,12 +195,14 @@ class CarsTestCase(APITestCase):
         self.assertEqual(self.car.model, payload["model"])
 
     def test_cars_add_feature_success(self):
-        """Add car features"""
+        """Add car features with user authenticated"""
+        response = self.client.post("/internal/login/", self.login_payload)
+        self.assertEqual(response.status_code, 200)
         payload = {
             "car_id": str(self.car.uuid),
             "feature_id": str(self.feature.uuid),
         }
-        response = self.client.post(f"/cars/add_feature/", payload)
+        response = self.client.post("/cars/add_feature/", payload)
         self.assertEqual(response.status_code, 200)
         self.car.refresh_from_db()
         car_features = [str(feature.uuid) for feature in self.car.features.all()]
@@ -200,6 +210,8 @@ class CarsTestCase(APITestCase):
 
     def test_cars_delete_success(self):
         """Delete car object"""
+        response = self.client.post("/internal/login/", self.login_payload)
+        self.assertEqual(response.status_code, 200)
         response = self.client.delete(f"/cars/{str(self.car.uuid)}/")
         self.assertEqual(response.status_code, 204)
         cars = Car.objects.all()
@@ -214,3 +226,97 @@ class CarsTestCase(APITestCase):
         self.assertEqual(len(reviews["reviews"]), 1)
         self.assertEqual(reviews["avg_rating"], self.review.stars)
         self.assertEqual(reviews["reviews"][0]["comment"], self.review.comment)
+
+
+class CarsNegativeTestCase(APITestCase):
+    """Testing cars endpoints with (negative cases)"""
+
+    def create_test_image(self):
+        f = BytesIO()
+        image = Image.new("RGB", (100, 100))
+        image.save(f, "jpeg")
+        f.seek(0)
+        return SimpleUploadedFile(
+            name="test_image.jpg",
+            content=f.read(),
+            content_type="image/jpeg",
+        )
+
+    def setUp(self):
+        self.feature = Feature.objects.create(
+            title="Transmisión manual",
+            description="Lorem ipsum dolor sit",
+            image=self.create_test_image(),
+        )
+        self.car = Car.objects.create(
+            car_type=CarsTypes.AUTOS,
+            model="Auto Test",
+            year=2024,
+            price=1000000,
+            title="Preparada para cualquier desafío",
+            description="Lorem ipsum dolor sit",
+            image=self.create_test_image(),
+        )
+        self.review = Review.objects.create(stars=5, comment="Test comment", car=self.car)
+        username = "test_username"
+        password = "TestingPassword123"
+        User.objects.create_user(email=username, username=username, password=password, is_staff=True, is_superuser=True)
+        self.login_payload = {"username": username, "password": password}
+
+    def tearDown(self):
+        self.car.image.delete()
+        self.feature.image.delete()
+        new_car = getattr(self, "new_car", None)
+        if new_car is not None:
+            new_car.image.delete()
+
+    def test_cars_create_not_authorized(self):
+        """Verify we cannot create car if client is not authenticated"""
+        payload = {
+            "car_type": CarsTypes.AUTOS,
+            "model": "Auto Test New",
+            "year": 2024,
+            "price": 1000000,
+            "title": "Preparada para cualquier desafío",
+            "description": "Lorem ipsum dolor sit",
+            "image": self.create_test_image(),
+        }
+        response = self.client.post("/cars/", payload, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cars_add_feature_not_authorized(self):
+        """If admin user is not authenticated, request to add feature is not successful"""
+        payload = {
+            "car_id": str(self.car.uuid),
+            "feature_id": str(self.feature.uuid),
+        }
+        response = self.client.post("/cars/add_feature/", payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cars_update_success(self):
+        """Update of car object is not success if client is not authenticated"""
+        self.car.image.delete()
+        payload = {
+            "car_type": CarsTypes.AUTOS,
+            "model": "Auto Modified",
+            "year": 2023,
+            "price": 2000000,
+            "title": "Preparada para cualquier desafío",
+            "description": "Lorem ipsum dolor sit",
+            "image": self.create_test_image(),
+        }
+        response = self.client.put(f"/cars/{str(self.car.uuid)}/", payload, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cars_patch_not_authorized(self):
+        """Partial update of car object is not success if client is not authenticated"""
+        payload = {
+            "model": "Auto Modified",
+        }
+        response = self.client.patch(f"/cars/{str(self.car.uuid)}/", payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cars_delete_not_authorized(self):
+        """Delete car object is not success if client is not authenticated"""
+        response = self.client.delete(f"/cars/{str(self.car.uuid)}/")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

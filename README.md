@@ -5,7 +5,8 @@ Submit to EGO challenge consisting in a development of a API using Django
 # Table of Contents
 1. [Install and run the project](#Install-and-run-the-project)
 2. [Run tests](#Run-tests)
-3. [Documentation](#Documentation)
+3. [Admin site](#Admin-site)
+4. [Documentation](#Documentation)
 
 
 
@@ -69,6 +70,16 @@ Run the project
 
 Example:
 python manage.py test 'ego.cars.tests.test_dealership.DealershipTestCase'
+
+## Admin-site
+
+Create super user
+
+    python manage.py createsuperuser
+
+Django admin site
+
+    localhost:8000/admin
 
 ## Documentation
 

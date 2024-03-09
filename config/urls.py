@@ -46,15 +46,14 @@ urlpatterns = (
             schema_view.with_ui("swagger", cache_timeout=0),
             name="schema-swagger-ui",
         ),
-        path(
-            "redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
-        ),
+        path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
         # Wagtail
         path("cms/", include(wagtailadmin_urls)),
         path("documents/", include(wagtaildocs_urls)),
         path("pages/", include(wagtail_urls)),
         # EGO Cars app
         path("", include(("ego.cars.urls", "cars"), namespace="cars")),
+        path("", include(("ego.internal.urls", "internal"), namespace="internal")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

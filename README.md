@@ -66,10 +66,16 @@ Run the project
 
 ## Run tests
 
-    python manage.py test <test path>
+Run all tests
+
+    python manage.py test
+
+Run specific test
+
+    python manage.py test -k "<test_name>"
 
 Example:
-python manage.py test 'ego.cars.tests.test_dealership.DealershipTestCase'
+python manage.py test -k "test_dealerships_list_success"
 
 ## Admin-site
 

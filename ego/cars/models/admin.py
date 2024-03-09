@@ -18,7 +18,7 @@ admin.site.register(Car, CarsAdmin)
 
 
 class FeaturesAdmin(admin.ModelAdmin):
-    list_display = ["uuid", "title", "description", "car"]
+    list_display = ["uuid", "title", "description"]
     ordering = ["uuid"]
 
 

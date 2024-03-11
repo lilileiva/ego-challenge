@@ -7,3 +7,5 @@ from .admin import CarsAdmin
 from .admin import FeaturesAdmin
 from .admin import ReviewsAdmin
 from .admin import DealershipsAdmin
+
+from .base import BaseModel

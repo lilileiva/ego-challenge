@@ -199,10 +199,9 @@ class CarsTestCase(APITestCase):
         response = self.client.post("/internal/login/", self.login_payload)
         self.assertEqual(response.status_code, 200)
         payload = {
-            "car_id": str(self.car.uuid),
             "feature_id": str(self.feature.uuid),
         }
-        response = self.client.post("/cars/add_feature/", payload)
+        response = self.client.post(f"/cars/{str(self.car.uuid)}/add_feature/", payload)
         self.assertEqual(response.status_code, 200)
         self.car.refresh_from_db()
         car_features = [str(feature.uuid) for feature in self.car.features.all()]
@@ -219,8 +218,7 @@ class CarsTestCase(APITestCase):
 
     def test_car_reviews_list_success(self):
         """Verify list of car reviews"""
-        payload = {"car_id": str(self.car.uuid)}
-        response = self.client.post(f"/cars/reviews/", payload)
+        response = self.client.get(f"/cars/{str(self.car.uuid)}/reviews/")
         reviews = response.json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(reviews["reviews"]), 1)
@@ -287,10 +285,9 @@ class CarsNegativeTestCase(APITestCase):
     def test_cars_add_feature_not_authorized(self):
         """If admin user is not authenticated, request to add feature is not successful"""
         payload = {
-            "car_id": str(self.car.uuid),
             "feature_id": str(self.feature.uuid),
         }
-        response = self.client.post("/cars/add_feature/", payload)
+        response = self.client.post(f"/cars/{str(self.car.uuid)}/add_feature/", payload)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_cars_update_success(self):

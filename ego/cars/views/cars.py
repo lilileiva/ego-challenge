@@ -31,11 +31,12 @@ class CarsViewSet(viewsets.ModelViewSet):
     filter_backends = [OrderingFilter]
     ordering_fields = ["price", "year"]
     parser_classes = (MultipartParser, JSONParser, FileUploadParser)
+    lookup_field = "pk"
 
     def get_permissions(self):
         if self.action == "add_feature":
             return [IsAuthenticated(), IsAdminUser()]
-        elif self.request.method != "GET" and self.action != "reviews":
+        elif self.request.method != "GET":
             return [IsAuthenticated(), IsAdminUser()]
         else:
             return [AllowAny()]
@@ -44,22 +45,23 @@ class CarsViewSet(viewsets.ModelViewSet):
         methods=["post"],
         request_body=AddFeatureSerializer,
         responses=add_feature_responses,
+        operation_description="Add a feature to specific car",
     )
-    @action(detail=False, methods=["post"])
-    def add_feature(self, request):
-        serializer = AddFeatureSerializer(data=request.data)
+    @action(detail=True, methods=["post"])
+    def add_feature(self, request, pk):
+        serializer = AddFeatureSerializer(data=request.data, context={"car_id": pk})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        methods=["post"],
-        request_body=GetCarReviewsSerializer,
+        methods=["get"],
         responses=reviews_responses,
+        operation_description="Get all reviews of specific car",
     )
-    @action(detail=False, methods=["post"])
-    def reviews(self, request):
-        serializer = GetCarReviewsSerializer(data=request.data)
+    @action(detail=True, methods=["get"])
+    def reviews(self, request, pk):
+        serializer = GetCarReviewsSerializer(data={"car_id": pk})
         serializer.is_valid(raise_exception=True)
         data = serializer.save()
         response = {"avg_rating": data[0], "reviews": data[1]}

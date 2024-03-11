@@ -15,16 +15,16 @@ class CarSerializer(serializers.ModelSerializer):
 
 
 class AddFeatureSerializer(serializers.Serializer):
-    car_id = serializers.UUIDField()
     feature_id = serializers.UUIDField()
 
     def validate(self, data):
         feature = Feature.objects.filter(uuid=data["feature_id"])
-        car = Car.objects.filter(uuid=data["car_id"])
+        car = Car.objects.filter(uuid=self.context["car_id"])
         if not feature.exists():
             raise serializers.ValidationError("Feature does not exists")
         if not car.exists():
             raise serializers.ValidationError("Car does not exists")
+        data["car_id"] = self.context["car_id"]
         return data
 
     def create(self, validated_data):

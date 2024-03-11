@@ -5,8 +5,9 @@ Submit to EGO challenge consisting in a development of a API using Django
 # Table of Contents
 1. [Install and run the project](#Install-and-run-the-project)
 2. [Run tests](#Run-tests)
-3. [Admin site](#Admin-site)
-4. [Documentation](#Documentation)
+3. [Load database data](#Load-database-data)
+4. [Admin site](#Admin-site)
+5. [Documentation](#Documentation)
 
 
 
@@ -63,6 +64,12 @@ Migrate
 Run the project
 
     python manage.py runserver
+
+## #Load-database-data
+
+We have an empty database by default, to load data for testing porpuses use:
+
+    python manage.py loaddata dump.json
 
 ## Run tests
 

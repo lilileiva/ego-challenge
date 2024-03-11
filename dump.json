@@ -307,7 +307,7 @@
             "path": "0001",
             "depth": 1,
             "numchild": 1,
-            "translation_key": "a3d510f9-08db-454a-9f53-bcbdeefb292c",
+            "translation_key": "a6ef6c00-64dd-481b-a136-ec8f037111bc",
             "locale": 1,
             "latest_revision": null,
             "live": true,
@@ -344,7 +344,7 @@
             "path": "00010001",
             "depth": 2,
             "numchild": 0,
-            "translation_key": "a65ccd5c-bad0-4ca1-922d-a99243eea536",
+            "translation_key": "b903a6c9-555d-41e7-b2cf-01f2d6508158",
             "locale": 1,
             "latest_revision": null,
             "live": true,
@@ -525,6 +525,87 @@
                     "Moderators"
                 ]
             ]
+        }
+    },
+    {
+        "model": "cars.review",
+        "pk": "b4bc7c98-456c-48f2-bdb4-7507e3f93ad1",
+        "fields": {
+            "car": "2b576d6e-a7a8-406f-8838-2a05fff3d240",
+            "stars": 5,
+            "comment": "Good",
+            "created_at": "2024-03-08T16:34:31.326Z",
+            "udpated_at": "2024-03-08T16:34:31.326Z"
+        }
+    },
+    {
+        "model": "cars.car",
+        "pk": "2b576d6e-a7a8-406f-8838-2a05fff3d240",
+        "fields": {
+            "car_type": "Autos",
+            "model": "Toyota",
+            "year": 2021,
+            "price": 7000000,
+            "image": "cars/auto-ford_UXsZb2d.jpg",
+            "title": "Preparado para cualquier desafío",
+            "description": "Lorem ipsum dolor sit",
+            "created_at": "2024-03-08T15:17:10.184Z",
+            "udpated_at": "2024-03-08T16:36:15.946Z",
+            "features": [
+                "3a4a8c8a-ad9f-496d-8c7b-b589ff16d0cb"
+            ]
+        }
+    },
+    {
+        "model": "cars.car",
+        "pk": "8b9ab16c-83c2-4575-80c1-1d2cecbe86bd",
+        "fields": {
+            "car_type": "Autos",
+            "model": "Ford",
+            "year": 2020,
+            "price": 6000000,
+            "image": "cars/auto-ford.jpg",
+            "title": "Preparado para cualquier desafío",
+            "description": "Lorem ipsum dolor sit",
+            "created_at": "2024-03-08T14:33:42.005Z",
+            "udpated_at": "2024-03-08T16:36:00.743Z",
+            "features": [
+                "21fc2957-a5de-4718-83b4-9e585a49950e",
+                "3a4a8c8a-ad9f-496d-8c7b-b589ff16d0cb"
+            ]
+        }
+    },
+    {
+        "model": "cars.feature",
+        "pk": "21fc2957-a5de-4718-83b4-9e585a49950e",
+        "fields": {
+            "image": "features/auto-ford_JsGKSwl.jpg",
+            "title": "Suspensión mejorada",
+            "description": "Lorem ipsum dolor sit",
+            "created_at": "2024-03-08T16:29:03.919Z",
+            "udpated_at": "2024-03-08T16:29:03.919Z"
+        }
+    },
+    {
+        "model": "cars.feature",
+        "pk": "3a4a8c8a-ad9f-496d-8c7b-b589ff16d0cb",
+        "fields": {
+            "image": "features/auto-ford.jpg",
+            "title": "Transmisión manual",
+            "description": "Lorem ipsum dolor sit",
+            "created_at": "2024-03-08T16:28:52.509Z",
+            "udpated_at": "2024-03-08T16:28:52.509Z"
+        }
+    },
+    {
+        "model": "cars.dealership",
+        "pk": "2ba00ad0-a4c9-49d1-b627-f9ed39e186b2",
+        "fields": {
+            "address": "Sarmiento 100",
+            "province": "Buenos Aires",
+            "phone": 1100110,
+            "created_at": "2024-03-08T16:31:19.910Z",
+            "udpated_at": "2024-03-08T16:31:19.910Z"
         }
     }
 ]

@@ -25,11 +25,11 @@ Create .env file with env_sample.txt content
 
 Build the image
 
-    docker build -t django-ego .
+    docker-compose -f local.yml build
 
 Run the project
 
-    docker run -it -p 8000:8000 django-ego
+    docker-compose -f local.yml run --rm --service-ports django.ego
 
 ### with virtual enviroment
 

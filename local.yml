@@ -1,0 +1,19 @@
+version: '3'
+
+volumes:
+  local_django_crond_log: {}
+
+services:
+  django.ego:
+    build:
+      context: .
+      dockerfile: ./compose/local/Dockerfile
+    image: ego_django_local
+    volumes:
+      - .:/app
+      - local_django_crond_log:/var/log
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: /entrypoint
